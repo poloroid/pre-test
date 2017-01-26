@@ -1,23 +1,33 @@
 package com.priceminister.account.implementation;
 
 import com.priceminister.account.*;
+import com.priceminister.account.exception.IllegalBalanceException;
 
 
 public class CustomerAccount implements Account {
 
+    private Double balance = 0d;
+
     public void add(Double addedAmount) {
-        // TODO Auto-generated method stub
+            balance += addedAmount;
     }
 
     public Double getBalance() {
-        // TODO Auto-generated method stub
-        return null;
+        return balance;
     }
 
-    public Double withdrawAndReportBalance(Double withdrawnAmount, AccountRule rule) 
+    public Double withdrawAndReportBalance(Double withdrawAmount, AccountRule rule)
     		throws IllegalBalanceException {
-        // TODO Auto-generated method stub
-        return null;
+        Double resultingAccountBalance = balance-withdrawAmount;
+            if (rule.withdrawPermitted(resultingAccountBalance)) {
+                withdraw(withdrawAmount);
+            } else {
+                throw new IllegalBalanceException(resultingAccountBalance);
+            }
+            return balance;
     }
 
+    private void withdraw(Double withdrawAmount) {
+        balance -= withdrawAmount;
+    }
 }
